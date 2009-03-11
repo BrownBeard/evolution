@@ -1,0 +1,15 @@
+This is the first project due in CSC412, written by Adam Seyfarth and Russel
+Gibson.
+
+It is a framework for genetic programming.  That is, when combined with a
+fitness evaluation function and a set of primitives + terminals, it can be
+used to evolve a program that approximates the desired behavior.  The language
+of the project is Common Lisp.
+
+Two ideas for example behaviors to evolve are:
+- A program that takes two real numbers and produces the distance of that
+  point from the origin.
+- A program that takes two integer coordinates and returns a value from 0 to
+  255 representing lightness, which when run over a range of x and y will draw
+  a monochromatic picture of the moon (gray crescent in the middle, black
+  elsewhere).
