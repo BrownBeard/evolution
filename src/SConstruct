@@ -1,0 +1,9 @@
+env = Environment(tools=['default', 'clisp'])
+# Note: main must come last in ClispProgram.
+sources = ["tree", "load", "main"]
+def addlisp(s): return s + ".lisp"
+def addlib(s):  return s + ".lib"
+evolve = env.ClispProgram("evolve", map(addlisp, sources))
+env.Clean(evolve, map(addlib, sources))
+
+# vim: ft=python

@@ -1,0 +1,4 @@
+*.lib
+*.fas
+.sconsign*
+evolve
