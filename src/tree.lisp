@@ -4,7 +4,7 @@
     (format t "No way to get a ~a.~%" result-type)
     (exit))
 
-  (if (>= depth 0)
+  (if (> depth 0)
     (setf prim (nth (random (length appropriate)) appropriate))
     (progn (setf terminals (remove-if-not (lambda (x) (= (length (second x)) 0))
                                           appropriate))
