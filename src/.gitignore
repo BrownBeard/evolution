@@ -2,3 +2,4 @@
 *.fas
 .sconsign*
 evolve
+.*.sw*

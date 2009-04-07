@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 [sources] ... <target>"
+    exit 1
+fi
+
+sources=$1      # Consume the first argument as first source
+shift
+
+while [ $# -gt 1 ]; do  # Loop through all-remaining-but-one arguments
+    sources="$sources $1"
+    shift
+done
+
+target=$1       # Target is last argument
+shift
+
+# Build the target
+echo '#!/usr/bin/clisp' >$target
+for i in $sources; do
+    cat $i >>$target
+done
+chmod +x $target
