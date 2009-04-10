@@ -1,0 +1,11 @@
+(defun range (start end)
+  (loop for i from start below end collect i))
+
+(defun find-spot (likelihoods)
+  (let* ((size (reduce #'+ likelihoods :key #'first))
+         (goal (random size)))
+    (let ((likelihood likelihoods)
+          (sum (caar likelihoods)))
+      (loop while (<= sum goal) do (progn (setf likelihood (rest likelihood))
+                                          (incf sum (caar likelihood))))
+      (cadar likelihood))))

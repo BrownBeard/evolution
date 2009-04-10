@@ -9,14 +9,6 @@
 (defun find-hood (depth)
   (1+ depth))
 
-(defun find-spot (likelihoods)
-  (let* ((size (reduce #'+ likelihoods))
-         (goal (random size)))
-    (do ((i -1 (1+ i))
-         (likelihood likelihoods (rest likelihood))
-         (sum 0 (+ sum (first likelihood))))
-        ((> sum goal) i))))
-
 (defun get-type (tree primitives)
   (let ((prim (if (typep tree 'list) (first tree) tree))
         (key NIL))
@@ -24,7 +16,8 @@
       (if (typep i 'keyword)
         (setf key i)
         (dolist (j i)
-          (when (or (equalp prim (first j)) (and (typep prim 'number) (typep (first j) 'array)))
+          (when (or (equalp prim (first j))
+                    (and (typep prim 'number) (typep (first j) 'array)))
             (return-from get-type key)))))))
 
 (defun change-subtree (tree spot goal depth primitives)
@@ -49,5 +42,9 @@
 (defun mutate (tree depth primitives)
   (let* ((depths (find-depths tree 0))
          (likelihoods (mapcar #'find-hood depths))
-         (spot (find-spot likelihoods)))
-    (caadr (change-subtree tree 0 spot depth primitives))))
+         (spot (find-spot (map 'list
+                               #'list
+                               likelihoods
+                               (range 0 (length likelihoods))))))
+    (let ((ans (change-subtree tree 0 spot depth primitives)))
+      (caadr ans))))
