@@ -1,25 +1,3 @@
-(defun find-depths (tree depth)
-  (if (typep tree 'list)
-    (let ((ans (list depth)))
-      (dolist (sub (rest tree))
-        (setf ans (concatenate 'list ans (find-depths sub (1+ depth)))))
-      ans)
-    (list depth)))
-
-(defun find-hood (depth)
-  (1+ depth))
-
-(defun get-type (tree primitives)
-  (let ((prim (if (typep tree 'list) (first tree) tree))
-        (key NIL))
-    (dolist (i primitives)
-      (if (typep i 'keyword)
-        (setf key i)
-        (dolist (j i)
-          (when (or (equalp prim (first j))
-                    (and (typep prim 'number) (typep (first j) 'array)))
-            (return-from get-type key)))))))
-
 (defun change-subtree (tree spot goal depth primitives)
   (cond
     ((> spot goal)
@@ -35,7 +13,7 @@
                 (dolist (i (rest tree))
                   (setf res (change-subtree i x goal depth primitives))
                   (setf x (first res))
-                  (setf ans (concatenate 'list ans (second res))))
+                  (setf ans (append ans (second res))))
                 (list x (list ans))))
        (list (1+ spot) (list tree))))))
 

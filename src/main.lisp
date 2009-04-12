@@ -19,12 +19,25 @@
       (setf population (generation population
                                    (getf conf :answer)
                                    (getf conf :primitives)
-                                   (getf opts :%-parent-from-top)
-                                   (getf opts :%-parent-random)
+                                   (getf opts :%-parent-pool-from-top)
+                                   (getf opts :%-parent-from-pool)
                                    (getf opts :%-mutation)
                                    (getf opts :%-survive-from-top)
                                    (getf opts :%-survive-random)
                                    (getf opts :mutation-depth))))
     (print-pop population)))
 
+(defun test-main ()
+  (setq *random-state* (make-random-state t))
+  (let* ((opts (parse-args))
+         (conf (read-config (getf opts :filename)))
+         (population NIL))
+    (dotimes (i 2)
+      (setf population (append population (list (build-tree 3
+                                                            (getf conf :primitives)
+                                                            :number)))))
+    (print-pop population)
+    (print (mate (first population) (second population) (getf conf :primitives)))))
+
+;(test-main)
 (main)

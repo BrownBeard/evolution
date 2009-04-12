@@ -1,3 +1,15 @@
+(defun find-depths (tree depth)
+  (if (typep tree 'list)
+    (let ((ans (list depth)))
+      (dolist (sub (rest tree))
+        (setf ans (append ans (find-depths sub (1+ depth)))))
+      ans)
+    (list depth)))
+
+(defun find-hood (depth)
+  ;(1+ depth))
+  1)
+
 (defun range (start end)
   (loop for i from start below end collect i))
 
