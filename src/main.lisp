@@ -37,7 +37,7 @@
                                                             (getf conf :primitives)
                                                             :number)))))
     (print-pop population)
-    (print (mate (first population) (second population) (getf conf :primitives)))))
+    (print-pop (mate (first population) (second population) (getf conf :primitives)))))
 
 ;(test-main)
 (main)

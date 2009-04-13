@@ -11,7 +11,7 @@
                 :mutation-depth 2
                 :%-parent-pool-from-top 10
                 :%-parent-from-pool 10
-                :%-mutation 100
+                :%-mutation 10
                 :%-survive-from-top 2
                 :%-survive-random 6)))
     (do ((args ext:*args* (rest args)))

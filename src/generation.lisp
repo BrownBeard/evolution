@@ -50,7 +50,7 @@
                (index2 (random (length parents)))
                (parent1 (nth index1 parents))
                (parent2 (nth index2 parents)))
-          (setf result (append result (mate parent1 parent2)))))
+          (setf result (append result (mate parent1 parent2 primitives)))))
       ; Do the mutations from pool.
       (dotimes (i mutes)
         (let* ((index (random (length parents)))
@@ -63,8 +63,11 @@
         ((>= (length result) pop-size) result)
       (if (and (>= (random 100) %-mutation) (>= (- pop-size (length result)) 2))
         ; T: Do a crossover
-        (setf result (append result (mate (nth (find-spot fitnesses) population)
-                                          (nth (find-spot fitnesses) population))))
+        (let ((ind1 (find-spot fitnesses))
+              (ind2 (find-spot fitnesses)))
+          (setf result (append result (mate (nth ind1 population)
+                                            (nth ind2 population)
+                                            primitives))))
         ; NIL: Do a mutation
         (setf result (append result
                              (list (mutate (nth (find-spot fitnesses) population)
