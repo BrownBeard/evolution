@@ -6,6 +6,7 @@
   ; Set the defaults
   (let ((opts '(:filename "config.lisp"
                 :population 100
+                :sample-pts 100
                 :generations 10
                 :initial-depth 5
                 :mutation-depth 2
@@ -13,13 +14,17 @@
                 :%-parent-from-pool 10
                 :%-mutation 10
                 :%-survive-from-top 2
-                :%-survive-random 6)))
+                :%-survive-random 6))
+        (unanswered NIL))
     (do ((args ext:*args* (rest args)))
         ((<= (length args) 0))
       (cond
         ((string= (first args) "--population")
          (setf args (rest args))
          (setf (getf opts :population) (parse-integer (first args))))
+        ((string= (first args) "--sample-pts")
+         (setf args (rest args))
+         (setf (getf opts :sample-pts) (parse-integer (first args))))
         ((string= (first args) "--generations")
          (setf args (rest args))
          (setf (getf opts :generations) (parse-integer (first args))))
@@ -44,5 +49,8 @@
         ((string= (first args) "--%-survive-random")
          (setf args (rest args))
          (setf (getf opts :%-survive-random) (parse-integer (first args))))
-        (t setf (getf opts :filename) (first args))))
-    opts))
+        ((string= (first args) "--filename")
+         (setf args (rest args))
+         (setf (getf opts :filename) (first args)))
+        (t (push unanswered (first args)))))
+    (list opts unanswered)))

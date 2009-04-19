@@ -1,5 +1,6 @@
 (defun generation (population
                    answer
+                   parameters
                    primitives
                    %-parent-pool-from-top
                    %-parent-from-pool
@@ -8,19 +9,29 @@
                    %-survive-random
                    mutation-depth)
   (let* ((pop-size (length population))
-         (fitnesses (sort (map 'list
+         (fitnesses NIL)
+         (candidates NIL)
+         (result NIL)
+         (parents NIL)
+         (survivors 0))
+    ; Git fitnesses list correct
+    (setf fitnesses (sort (map 'list
                                #'list
-                               (mapcar (lambda (x) (fitness x answer))
+                               (mapcar (lambda (x) (fitness x
+                                                            answer
+                                                            parameters))
                                        population)
                                (range 0 pop-size))
                           #'>
                           :key #'first))
-         (candidates (copy-list fitnesses))
-         (result NIL)
-         (parents NIL)
-         (survivors 0))
+    (let ((uplmt (1+ (caar fitnesses))))
+      (setf fitnesses (reverse
+                        (mapcar (lambda (x) (list (- uplmt (first x)) (second x)))
+                                fitnesses))))
+    (setf candidates (copy-list fitnesses))
     ; Survivors that didn't die from the bottom
     (let ((sb (floor (* pop-size (/ %-survive-from-top 100)))))
+      (when (< sb 1) (setf sb 1))  ; The best must carry on.
       (dotimes (i sb)
         (setf result (append result (list (nth (second (first candidates))
                                                population))))
@@ -59,8 +70,7 @@
                                                     mutation-depth
                                                     primitives)))))))
     ; Do randomly selected births, returning result when finished.
-    (do ()
-        ((>= (length result) pop-size) result)
+    (do () ((>= (length result) pop-size) result)
       (if (and (>= (random 100) %-mutation) (>= (- pop-size (length result)) 2))
         ; T: Do a crossover
         (let ((ind1 (find-spot fitnesses))

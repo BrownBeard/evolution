@@ -1,16 +1,25 @@
 env = Environment(tools=['default', 'clisp'])
-# Note: main must come last in ClispProgram.
-sources = ["crossover",
-           "fitness",
-           "generation",
-           "biasing",
-           "mutate",
-           "tree",
-           "load",
-           "main"]
 def addlisp(s): return s + ".lisp"
 def addlib(s):  return s + ".lib"
-evolve = env.ClispProgram("evolve", map(addlisp, sources))
-env.Clean(evolve, map(addlib, sources))
+
+# Note: file with main routine must come last among sources
+ev_sources = ["safety",
+              "crossover",
+              "fitness",
+              "generation",
+              "biasing",
+              "mutate",
+              "tree",
+              "load",
+              "evolve"]
+
+run_sources = ["safety",
+               "run"]
+
+evolve = env.ClispProgram("evolve", map(addlisp, ev_sources))
+env.Clean(evolve, map(addlib, ev_sources))
+
+evolve = env.ClispProgram("run", map(addlisp, run_sources))
+env.Clean(evolve, map(addlib, run_sources))
 
 # vim: ft=python
