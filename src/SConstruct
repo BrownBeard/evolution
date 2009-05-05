@@ -19,7 +19,10 @@ run_sources = ["safety",
 evolve = env.ClispProgram("evolve", map(addlisp, ev_sources))
 env.Clean(evolve, map(addlib, ev_sources))
 
-evolve = env.ClispProgram("run", map(addlisp, run_sources))
-env.Clean(evolve, map(addlib, run_sources))
+run = env.ClispProgram("run_ev", map(addlisp, run_sources))
+env.Clean(run, map(addlib, run_sources))
+
+env.Install('/usr/local/bin', [evolve, run])
+env.Alias('install', '/usr/local/bin')
 
 # vim: ft=python

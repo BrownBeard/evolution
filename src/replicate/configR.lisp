@@ -5,9 +5,9 @@
                        (- (:number :number))
                        (* (:number :number))
                        (safe/ (:number :number))
-                       (safesqrt (:number)))
+                       (safesqrt (:number))
                        ;(safeexpt (:number :number))
-                       ;(if (:bool :number :number)))
+                       (if (:bool :number :number)))
               :bool ((or (:bool :bool))
                      (and (:bool :bool))
                      (not (:bool))
@@ -15,14 +15,17 @@
                      ;(/= (:number :number))
                      (>= (:number :number))
                      (>= (:number :number))
-                     ;(> (:number :number))
-                     ;(<= (:number :number))
-                     (< (:number :number))
-                     (< (:number :number))))
+                     (>= (:number :number))
+                     (>= (:number :number))
+                     (>= (:number :number))
+                     (>= (:number :number))))
                      ;(t ())))  ; Use this to ensure shorter trees in startup.
                                 ; But, then the resulting expressions look
                                 ; stupid.
                      ;(NIL ())  Don't be putting NIL in there, it will break.
  :parameters ((x y) (:number))
- :answer (sqrt (+ (* x x) (* y y)))
- :range (-50 50))
+ :answer (progn (defvar *vals* NIL)
+                (unless *vals*
+                  (with-open-file (fp "R") (setf *vals* (read fp))))
+                (elt *vals* (+ (* 10 (floor y)) (floor x))))
+ :range (0 10))

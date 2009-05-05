@@ -1,0 +1,64 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <in_image>.ppm <out_image.ppm> [options to evolve]"
+    exit
+fi
+
+input=$1
+shift
+output=$1
+shift
+
+echo "Parsing..."
+
+./parse.pl <$input
+
+echo "Evolving..."
+
+evolve --filename configR.lisp $* >er
+evolve --filename configG.lisp $* >eg
+evolve --filename configB.lisp $* >eb
+
+until [ -e er -a -e eg -a -e eb ]; do
+    sleep 0.2
+done
+
+r=0
+g=0
+b=0
+
+echo "Creating output..."
+
+echo P3 >$output
+echo "# CREATOR: replicated with evolve, from $input" >>$output
+echo 10 10 >>$output
+echo 255 >>$output
+
+for ((y=0; y < 10; y++)); do
+    for ((x=0; x < 10; x++)); do
+        #echo $x $y
+        r=`run_ev er '(x y)' "($x $y)"`
+        g=`run_ev eg '(x y)' "($x $y)"`
+        b=`run_ev eb '(x y)' "($x $y)"`
+        echo $r >>$output
+        echo $g >>$output
+        echo $b >>$output
+        progress=$((80*(10*y+x)/(10*10)))
+        printf "\r"
+        for ((i=0; i < progress; i++)); do
+            printf "#"
+        done
+        for ((i=0; i < 80 - progress; i++)); do
+            printf " "
+        done
+        printf "$"
+    done
+done
+printf "\n"
+
+echo "Removing temp files..."
+
+# rm -f R G B er eg eb
+
+echo "Done."
